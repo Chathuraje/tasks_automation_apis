@@ -68,7 +68,8 @@ async def generate_script_and_seo(article):
                        f"URL: {article['url']}\n\n"
                        "The script should be engaging, easy to follow, and sound natural when spoken. "
                        "Do not include any music cues, stage directions, emojis, or promotional phrases like 'subscribe for more.' "
-                       "Just deliver a clean, compelling spoken script that keeps the audience hooked from the very first sentence."
+                       "Just deliver a clean, compelling spoken script that keeps the audience hooked from the very first sentence.'"
+                       "Start with a hook that grabs attention instantly—something surprising, a bold claim, or a thought-provoking question."
         },
         {
             "role": "user",
