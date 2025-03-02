@@ -37,16 +37,18 @@ jobs:
       run: |
         sam build
 
-    - name: Deploy FastAPI to AWS Lambda with environment variables
+    - name: Deploy FastAPI to AWS Lambda (Prod)
       run: |
         sam deploy \
           --stack-name CryptoCyberNewsFastAPI \
-          --s3-bucket my-sam-deployments-bucket \
           --region ${{ secrets.AWS_REGION }} \
           --capabilities CAPABILITY_IAM \
           --no-confirm-changeset \
           --no-fail-on-empty-changeset \
           --resolve-s3 \
           --parameter-overrides \
-            NewsApiKey=${{ secrets.NEWS_API_KEY }} \
-            AuthApiKey=${{ secrets.AUTH_API_KEY }}
+            "NewsApiKey=${{ secrets.NEWS_API_KEY }}" \
+            "AuthApiKey=${{ secrets.AUTH_API_KEY }}" \
+            "StageName=prod"
+
+
