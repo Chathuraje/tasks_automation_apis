@@ -30,7 +30,7 @@ def fetch_crypto_news():
         "to": today.strftime("%Y-%m-%d"),  # Up to today
         "sortBy": "publishedAt",  # Sorting by most recent articles
         "language": "en",  # Fetch only English news
-        "pageSize": 10,  # Limit to 10 articles
+        "pageSize": 6,  # Limit to 10 articles
         "apiKey": config.NEWS_API_KEY
     }
 
@@ -50,10 +50,7 @@ def fetch_crypto_news():
     # Extract relevant fields from the articles
     return [
         {
-            "author": article.get("author"),
             "title": article.get("title"),
-            "description": article.get("description"),
-            "publishedAt": article.get("publishedAt"),
             "url": article.get("url"),
         }
         for article in data["articles"]

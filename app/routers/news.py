@@ -16,4 +16,4 @@ async def get_crypto_finance_news():
     - Returns articles in structured JSON format.
     """
     articles = fetch_crypto_news()
-    return {"status": "ok", "totalResults": len(articles), "articles": articles}
+    return {"articles": articles}
