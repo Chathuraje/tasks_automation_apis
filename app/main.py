@@ -9,7 +9,7 @@ from mangum import Mangum
 load_dotenv()
 
 # Initialize FastAPI app
-app = FastAPI()
+app = FastAPI(root_path="/Prod")
 
 # Retrieve API keys from .env file
 API_KEY = os.getenv("NEWS_API_KEY")
