@@ -13,11 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set UTF-8 Encoding (Fix Unicode Errors)
-        run: |
-          export PYTHONUTF8=1
-          export PYTHONIOENCODING=utf-8
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -36,10 +31,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Run SAM Build
+      - name: Build the SAM application
         run: |
-          sam build --debug || (echo "SAM Build failed, retrying with container" && sam build --use-container)
-      
-      - name: Deploy to AWS Lambda
+          sam build
+
+      - name: Deploy FastAPI to AWS Lambda
         run: |
-          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+          sam deploy \
+            --stack-name CryptoCyberNewsFastAPI \
+            --region ${{ secrets.AWS_REGION }} \
+            --capabilities CAPABILITY_IAM \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset
