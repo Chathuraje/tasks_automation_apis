@@ -15,7 +15,7 @@ class NewsScrape(BaseModel):
     
 class NewsScrapeResponse(BaseModel):
     count: int
-    news_articles: list[NewsScrape]
+    articles: list[NewsScrape]
     
     
 
