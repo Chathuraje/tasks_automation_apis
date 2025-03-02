@@ -21,7 +21,7 @@ def fetch_crypto_news():
     from_date = (today - timedelta(days=2)).strftime("%Y-%m-%d")
 
     # Define relevant keywords for finance & crypto impact
-    keywords = "crypto OR bitcoin OR ethereum OR crypto market"
+    keywords = "crypto OR bitcoin OR ethereum"
 
     # API request parameters
     params = {
