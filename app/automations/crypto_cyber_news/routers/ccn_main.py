@@ -16,13 +16,13 @@ async def scrape_news():
     
     return {
         "count": len(news),
-        "news_articles": news
+        "articles": news
     }
 
 @router.post("/find_best_article", response_model=NewsScrape)
-async def generate_news_script(news: list[NewsScrape]):
+async def generate_news_script(articles: list[NewsScrape]):
     
-    processed_result = await select_best_news(news)
+    processed_result = await select_best_news(articles)
     
     if "error" in processed_result:
         raise HTTPException(status_code=400, detail=processed_result["error"])
