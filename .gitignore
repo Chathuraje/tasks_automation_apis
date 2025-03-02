@@ -178,3 +178,6 @@ cython_debug/
 
 # AWS SAM Build Files
 .aws-sam
+
+# Remove Draft Folder
+.draft
