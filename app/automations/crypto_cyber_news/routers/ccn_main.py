@@ -1,16 +1,29 @@
 from fastapi import APIRouter, HTTPException
 from app.automations.crypto_cyber_news.features.news_fetcher import fetch_crypto_news
-from app.automations.crypto_cyber_news.models.news_model import NewsResponse
+from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrapeResponse
 from app.automations.crypto_cyber_news.features.ask_gpt import process_news_articles
 
 # Initialize router for news-related endpoints
 router = APIRouter(prefix="/crypto_cyber_news", tags=["Crypto Cyber News"])
 
-@router.get("/", response_model=NewsResponse)
-async def generate_news_script():
+
+@router.get("/scrape-news", response_model=NewsScrapeResponse)
+async def scrape_news():
     news = fetch_crypto_news()
     
-    processed_result = await process_news_articles(news)
+    if "error" in news:
+        raise HTTPException(status_code=400, detail=news["error"])
+    
+    return {
+        "count": len(news),
+        "news_articles": news
+    }
+
+@router.get("/", response_model=NewsResponse)
+async def generate_news_script():
+    
+    
+    processed_result = await process_news_articles("")
     
     if "error" in processed_result:
         raise HTTPException(status_code=400, detail=processed_result["error"])

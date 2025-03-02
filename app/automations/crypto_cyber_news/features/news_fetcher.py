@@ -32,7 +32,7 @@ def fetch_crypto_news():
         "to": today.strftime("%Y-%m-%d"),  # Up to today
         "sortBy": "publishedAt",  # Sorting by most recent articles
         "language": "en",  # Fetch only English news
-        "pageSize": 6,  # Limit to 10 articles
+        "pageSize": 12,  # Limit to 10 articles
         "apiKey": config.NEWS_API_KEY
     }
 
@@ -54,12 +54,11 @@ def fetch_crypto_news():
 
     # Initialize an empty list to store filtered articles
     filtered_articles = []
-
     # Iterate through each article in the dataset
     for article in data["articles"]:
         # Extract the title of the article
         article_title = article.get("title")
-
+        
         # Check if the article has a valid title and if it is not already uploaded
         if article_title and article_title not in uploaded_titles:
             # Create a dictionary containing the title and URL of the article
@@ -70,6 +69,9 @@ def fetch_crypto_news():
             
             # Append the filtered article to the list
             filtered_articles.append(filtered_article)
+            
+        if len(filtered_articles) >= 5:
+            break
 
 
     return filtered_articles
