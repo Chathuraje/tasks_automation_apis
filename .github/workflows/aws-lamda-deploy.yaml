@@ -3,37 +3,37 @@ name: Deploy FastAPI to AWS Lambda
 on:
   push:
     branches:
-      - production
+      - production  # Runs only when pushing to "production" branch
 
 jobs:
   deploy:
-    name: Deploy FastAPI to AWS Lambda
+    name: Deploy FastAPI
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
       - name: Install AWS SAM CLI
         run: |
           pip install aws-sam-cli
 
-      - name: Install Dependencies
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Build FastAPI app with AWS SAM
         run: |
-          pip install -r requirements.txt
+          sam build
 
-      - name: Build with SAM
-        run: sam build
-
-      - name: Deploy to AWS
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
+      - name: Deploy FastAPI to AWS Lambda
         run: |
           sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
