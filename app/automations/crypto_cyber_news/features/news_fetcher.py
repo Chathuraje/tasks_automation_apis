@@ -64,7 +64,7 @@ def fetch_crypto_news():
             # Create a dictionary containing the title and URL of the article
             filtered_article = {
                 "title": article_title,
-                "url": article.get("Article URL")
+                "url": article.get("url")
             }
             
             # Append the filtered article to the list
