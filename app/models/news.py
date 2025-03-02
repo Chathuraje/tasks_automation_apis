@@ -1,9 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
-
-class NewsArticle(BaseModel):
-    title: str
-    url: str
-
 class NewsResponse(BaseModel):
-    articles: list[NewsArticle]
+    article_title: str
+    article_url: str
+    script: str
+    seo_title: str
+    seo_description: str
+    seo_tags: list[str]
