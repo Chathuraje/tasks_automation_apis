@@ -12,6 +12,7 @@ def fetch_crypto_news():
     - Filters news from the past two days.
     - Sorts articles by the most recent publish date.
     - Returns a structured list of news articles.
+    
     """
 
     if not config.NEWS_API_KEY:
