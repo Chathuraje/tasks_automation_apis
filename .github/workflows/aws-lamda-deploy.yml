@@ -33,6 +33,12 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - name: Clean the Build Directory
+        run: |
+          find . -name "*.pyc" -delete
+          find . -name "__pycache__" -delete
+          rm -rf .aws-sam
+
       - name: Build with AWS SAM
         run: sam build  # Now Python 3.11 should be available
 
