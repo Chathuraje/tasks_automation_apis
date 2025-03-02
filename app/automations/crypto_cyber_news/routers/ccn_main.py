@@ -22,6 +22,7 @@ async def generate_news_script():
         "script": processed_result["script"],
         "seo_title": processed_result["seo_title"],
         "seo_description": processed_result["seo_description"],
-        "seo_tags": processed_result["seo_tags"]
+        "seo_tags": processed_result["seo_tags"],
+        "image_prompts": processed_result["image_prompts"]
     }
 
