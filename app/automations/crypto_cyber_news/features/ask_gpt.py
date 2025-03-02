@@ -64,8 +64,8 @@ async def generate_script_and_seo(article):
         {
             "role": "user",
             "content": f"Write a 1-minute YouTube script summarizing the following news article:\n\n"
-                       f"Title: {article['title']}\n"
-                       f"URL: {article['url']}\n\n"
+                       f"Title: {article.title}\n"
+                       f"URL: {article.url}\n\n"
                        "The script should be engaging, easy to follow, and sound natural when spoken. "
                        "Do not include any music cues, stage directions, emojis, or promotional phrases like 'subscribe for more.' "
                        "Just deliver a clean, compelling spoken script that keeps the audience hooked from the very first sentence.'"
