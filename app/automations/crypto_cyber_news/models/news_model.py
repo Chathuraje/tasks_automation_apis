@@ -18,3 +18,6 @@ class NewsScrapeResponse(BaseModel):
     news_articles: list[NewsScrape]
     
     
+
+    
+    

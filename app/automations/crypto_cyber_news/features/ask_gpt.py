@@ -18,7 +18,7 @@ async def select_best_news(articles):
     for i, article in enumerate(articles):
         messages.append({
             "role": "user",
-            "content": f"{i+1}. {article['title']} ({article['url']})"
+            "content": f"{i+1}. {article.title} ({article.url})"
         })
 
     response_format={
@@ -128,25 +128,20 @@ async def generate_script_and_seo(article):
     return response["response"]
 
 
-async def process_news_articles(articles):
-    """
-    Processes a list of news articles:
-    1. Selects the best article based on relevance and impact.
-    2. Generates a 1-minute YouTube script and SEO metadata in a single API call.
-    3. Returns the processed data including title, URL, script, SEO title, description, and tags.
-    """
-    best_article = await select_best_news(articles)
-    if not best_article:
-        return {"error": "No suitable news article found."}
+# async def research_news_articles(articles):
+#     """
+#     Processes a list of news articles:
+#     1. Selects the best article based on relevance and impact.
+#     2. Generates a 1-minute YouTube script and SEO metadata in a single API call.
+#     3. Returns the processed data including title, URL, script, SEO title, description, and tags.
+#     """
+#     best_article = await select_best_news(articles)
+#     if not best_article:
+#         return {"error": "No suitable news article found."}
 
-    result = await generate_script_and_seo(best_article)
+#     # result = await generate_script_and_seo(best_article)
     
-    return {
-        "article_title": best_article["title"],
-        "article_url": best_article["url"],
-        "script": result["script"],
-        "seo_title": result["seo_title"],
-        "seo_description": result["seo_description"],
-        "seo_tags": result["seo_tags"],
-        "image_prompts": result["image_prompts"]
-    }
+#     return {
+#         "article_title": best_article["title"],
+#         "article_url": best_article["url"]
+#     }
