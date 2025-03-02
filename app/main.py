@@ -1,38 +1,35 @@
-from fastapi import FastAPI, Depends, HTTPException, Header
+from fastapi import FastAPI, HTTPException
 import requests
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
-from mangum import Mangum
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Initialize FastAPI app
-app = FastAPI(root_path="/Prod")
+app = FastAPI(
+    title="Crypto Cyber News",
+    description="API for Automating Crypto Cyber News Channel",
+    version="1.0.0"
+)
 
 # Retrieve API keys from .env file
 API_KEY = os.getenv("NEWS_API_KEY")
-AUTH_API_KEY = os.getenv("AUTH_API_KEY")  # API key for authentication
 NEWS_API_BASE_URL = "https://newsapi.org/v2/everything"
 
-def authenticate(api_key: str = Header(None)):
-    """Dependency to authenticate API requests using an API key"""
-    if not api_key or api_key != AUTH_API_KEY:
-        raise HTTPException(status_code=401, detail="Invalid or missing API key")
-    return api_key
-
+# Define the root endpoint
 @app.get("/")
 async def read_root():
     """Root endpoint to verify the API is running"""
     return {"message": "Hello, Crypto Cyber News!"}
 
+# Define the /news endpoint
 @app.get("/news")
-async def get_crypto_finance_news(api_key: str = Depends(authenticate)):
+async def get_crypto_finance_news():
     """
     Fetch latest financial & cryptocurrency news that might affect the market.
     
-    - Requires a valid API key via `api_key` header.
     - Filters relevant topics such as crypto, Bitcoin, Ethereum, regulation, and market trends.
     - Limits results to 10 most recent articles.
     - Limits sources to major financial & business news providers.
@@ -88,7 +85,3 @@ async def get_crypto_finance_news(api_key: str = Depends(authenticate)):
     articles.sort(key=lambda x: x["publishedAt"], reverse=True)
 
     return {"status": "ok", "totalResults": len(articles), "articles": articles}
-
-
-
-handler = Mangum(app)  # This is required for AWS Lambda
