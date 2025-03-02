@@ -176,3 +176,6 @@ cython_debug/
 # VS Code Files
 .vscode
 
+# AWS SAM Build Files
+.aws-sam
+samconfig.toml

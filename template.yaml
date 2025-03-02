@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: FastAPI deployment to AWS Lambda
+
+Resources:
+  FastAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: CryptoCyberNewsFastAPI
+      Handler: app.main.handler
+      Runtime: python3.10
+      CodeUri: .
+      MemorySize: 512
+      Timeout: 30
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        ApiGateway:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
