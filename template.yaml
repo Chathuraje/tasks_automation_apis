@@ -20,3 +20,15 @@ Resources:
           Properties:
             Path: /
             Method: ANY
+      Environment:
+        Variables:
+          NEWS_API_KEY: !Ref NewsApiKey
+          AUTH_API_KEY: !Ref AuthApiKey
+
+Parameters:
+  NewsApiKey:
+    Type: String
+    Description: "News API Key for fetching crypto news"
+  AuthApiKey:
+    Type: String
+    Description: "API Key for authentication"
