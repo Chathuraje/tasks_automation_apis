@@ -1,12 +1,22 @@
-import openai
+from openai import OpenAI
 from app.core.config import config
+import json
 
-openai.api_key = config.CHATGPT_API_KEY
+client = OpenAI(
+    api_key=config.OPENAI_API_KEY
+)
 
-async def chat_with_gpt(prompt: str):
-    response = openai.ChatCompletion.create(
-        model="gpt-4-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.7
+async def chat_with_gpt(messages, response_format):
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=messages,
+        response_format=response_format
     )
-    return {"response": response["choices"][0]["message"]["content"]}
+    # Assuming `response` is the API response object
+    message_content = response.choices[0].message.content
+
+    # Parse the JSON string inside message.content
+    parsed_content = json.loads(message_content)
+
+    # Return the parsed content
+    return {"response": parsed_content}

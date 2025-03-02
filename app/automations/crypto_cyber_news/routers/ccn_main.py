@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from app.services.news_fetcher import fetch_crypto_news
-from app.models.news import NewsResponse
-from app.services.ask_gpt import process_news_articles
+from app.automations.crypto_cyber_news.features.news_fetcher import fetch_crypto_news
+from app.automations.crypto_cyber_news.models.news_model import NewsResponse
+from app.automations.crypto_cyber_news.features.ask_gpt import process_news_articles
 
 # Initialize router for news-related endpoints
-router = APIRouter(prefix="/news", tags=["News"])
+router = APIRouter(prefix="/crypto_cyber_news", tags=["Crypto Cyber News"])
 
 @router.get("/", response_model=NewsResponse)
 async def generate_news_script():

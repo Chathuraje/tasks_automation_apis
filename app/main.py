@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import root, news
+from app.automations.crypto_cyber_news.routers import ccn_main
 
 app = FastAPI(
     title="Crypto Cyber News",
@@ -18,5 +18,14 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(root.router)
-app.include_router(news.router)
+@app.get("/")
+async def read_root():
+    """
+    Root endpoint to verify the API is running.
+
+    - Returns a simple greeting message.
+    """
+    return {"message": "Hello, Crypto Cyber News!"}
+
+
+app.include_router(ccn_main.router)
