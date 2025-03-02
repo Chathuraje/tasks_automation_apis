@@ -3,6 +3,7 @@ import requests
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import os
+from mangum import Mangum
 
 # Load environment variables from .env file
 load_dotenv()
@@ -22,12 +23,12 @@ def authenticate(api_key: str = Header(None)):
     return api_key
 
 @app.get("/")
-def read_root():
+async def read_root():
     """Root endpoint to verify the API is running"""
     return {"message": "Hello, Crypto Cyber News!"}
 
 @app.get("/news")
-def get_crypto_finance_news(api_key: str = Depends(authenticate)):
+async def get_crypto_finance_news(api_key: str = Depends(authenticate)):
     """
     Fetch latest financial & cryptocurrency news that might affect the market.
     
@@ -87,3 +88,7 @@ def get_crypto_finance_news(api_key: str = Depends(authenticate)):
     articles.sort(key=lambda x: x["publishedAt"], reverse=True)
 
     return {"status": "ok", "totalResults": len(articles), "articles": articles}
+
+
+
+handler = Mangum(app)  # This is required for AWS Lambda
