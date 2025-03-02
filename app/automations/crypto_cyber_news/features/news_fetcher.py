@@ -48,12 +48,27 @@ def fetch_crypto_news():
     if "articles" not in data:
         raise HTTPException(status_code=500, detail="Invalid response from NewsAPI")
     
+    # Retrieve the list of already uploaded article titles from Notion
     uploaded_titles = get_uploaded_titles_from_notion()
-    
-    filtered_articles = [
-        {"title": article.get("title"), "url": article.get("url")}
-        for article in data["articles"]
-        if article.get("title") and article.get("title") not in uploaded_titles
-    ]
+
+    # Initialize an empty list to store filtered articles
+    filtered_articles = []
+
+    # Iterate through each article in the dataset
+    for article in data["articles"]:
+        # Extract the title of the article
+        article_title = article.get("title")
+
+        # Check if the article has a valid title and if it is not already uploaded
+        if article_title and article_title not in uploaded_titles:
+            # Create a dictionary containing the title and URL of the article
+            filtered_article = {
+                "title": article_title,
+                "url": article.get("Article URL")
+            }
+            
+            # Append the filtered article to the list
+            filtered_articles.append(filtered_article)
+
 
     return filtered_articles

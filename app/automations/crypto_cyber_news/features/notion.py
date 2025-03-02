@@ -13,5 +13,8 @@ def get_uploaded_titles_from_notion():
     if "results" not in data:
         raise HTTPException(status_code=500, detail="Invalid response from Notion API")
 
-    return {entry["properties"]["Title"]["title"][0]["text"]["content"] 
-            for entry in data["results"] if "Title" in entry["properties"]}
+    return {
+        entry["properties"]["Article Title"]["title"][0]["text"]["content"]
+        for entry in data["results"]
+        if "Article Title" in entry["properties"] and entry["properties"]["Article Title"]["title"]
+    }
