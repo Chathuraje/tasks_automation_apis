@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.automations.crypto_cyber_news.routers import ccn_main
 
 app = FastAPI(
-    title="Crypto Cyber News",
-    description="API for Automating Crypto Cyber News Channel",
+    title="Youtube Automation API Collection",
+    description="API for Automating Youtube Channel",
     version="1.0.0"
 )
 
