@@ -178,4 +178,3 @@ cython_debug/
 
 # AWS SAM Build Files
 .aws-sam
-samconfig.toml
