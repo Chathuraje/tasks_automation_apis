@@ -2,6 +2,7 @@ import requests
 from datetime import datetime, timedelta
 from fastapi import HTTPException
 from app.core.config import config
+from app.automations.crypto_cyber_news.features.notion import get_uploaded_titles_from_notion
 
 def fetch_crypto_news():
     """
@@ -46,12 +47,13 @@ def fetch_crypto_news():
     # Validate API response
     if "articles" not in data:
         raise HTTPException(status_code=500, detail="Invalid response from NewsAPI")
-
-    # Extract relevant fields from the articles
-    return [
-        {
-            "title": article.get("title"),
-            "url": article.get("url"),
-        }
+    
+    uploaded_titles = get_uploaded_titles_from_notion()
+    
+    filtered_articles = [
+        {"title": article.get("title"), "url": article.get("url")}
         for article in data["articles"]
+        if article.get("title") and article.get("title") not in uploaded_titles
     ]
+
+    return filtered_articles
