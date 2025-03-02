@@ -20,7 +20,7 @@ async def scrape_news():
     }
 
 @router.post("/find_best_article", response_model=NewsScrape)
-async def generate_news_script(articles: list[NewsScrape]):
+async def generate_news_script(articles: dict[NewsScrape]):
     
     processed_result = await select_best_news(articles)
     
