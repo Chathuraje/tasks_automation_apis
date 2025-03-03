@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from app.automations.crypto_cyber_news.features.news_fetcher import fetch_crypto_news
-from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrape, VideoData
+from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrape, VideoData, VideoResponse
 from app.automations.crypto_cyber_news.features.ask_gpt import select_best_news, generate_script_and_seo
+from app.automations.crypto_cyber_news.features.generate_video import generate
+import httpx
 
 # Initialize router for news-related endpoints
 router = APIRouter(prefix="/crypto_cyber_news", tags=["Crypto Cyber News"])
@@ -51,8 +53,20 @@ async def generate_news_script(articles: NewsScrape):
 
 @router.post("/generate_video")
 async def generate_video(video_data: VideoData):
-    # TODO: Implement video generation logic based on the provided data
-    pass
+    video_response = await generate(video_data)
 
+    if video_response is None:
+        raise HTTPException(status_code=400, detail="Error generating video")
 
-    # Final Call: https://hook.eu2.make.com/xn3asqws1nj2lflg5vlophebsaxbraf1?file_id=1EaddgYMsot8MRxmGBnPZg84gEutXLjWR&news_id=1abab1fa0ce98151851de27870f967e8
+    # url = f"https://hook.eu2.make.com/xn3asqws1nj2lflg5vlophebsaxbraf1?video_id={video_response['video_id']}&notion_id={video_response['notion_id']}"
+
+    # async with httpx.AsyncClient() as client:
+    #     response = await client.get(url)
+
+    # if response.status_code != 200:
+    #     raise HTTPException(status_code=400, detail=f"Error sending video data to Notion: {response.text}")
+
+    # if response.status_code != 200:
+    #     raise HTTPException(status_code=400, detail="Error sending video data to Notion")
+
+    return {"message": "Video generation successful"}
