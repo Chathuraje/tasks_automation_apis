@@ -11,7 +11,7 @@ async def select_best_news(articles):
         },
         {
             "role": "user",
-            "content": "Here are some news articles. Choose the best one and return its title and URL in JSON format:\n\n"
+            "content": "Here are some news articles. Choose the best one to use for crypto related youtube channel and return its title and URL in JSON format:\n\n"
         }
     ]
     
@@ -81,8 +81,8 @@ async def generate_script_and_seo(article):
         },
         {
             "role": "user",
-            "content": "Finally, create two image prompts based on the script that can be used to generate AI-generated visuals for the video. "
-                       "Each prompt should describe a visually compelling scene related to the script."
+            "content": "Finally, create one image prompt based on the script that can be used to generate AI-generated visuals for the video. "
+                       "This prompt should describe a visually compelling scene related to the script."
         }
     ]
 
@@ -110,12 +110,9 @@ async def generate_script_and_seo(article):
                         "type": "array",
                         "items": {"type": "string"}
                     },
-                    "image_prompts": {
-                        "description": "A list of two AI-generated image prompts based on the script.",
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "maxItems": 2,
-                        "minItems": 2
+                    "image_prompt": {
+                        "description": "The one AI-generated image prompts based on the script.",
+                        "type": "string"
                     }
                 },
                 "required": ["script", "seo_title", "seo_description", "seo_tags", "image_prompts"],

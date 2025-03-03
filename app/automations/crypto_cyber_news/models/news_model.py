@@ -6,7 +6,7 @@ class NewsResponse(BaseModel):
     seo_title: str
     seo_description: str
     seo_tags: list[str]
-    image_prompts: list[str]
+    image_prompt: list[str]
 
 
 class NewsScrape(BaseModel):
@@ -17,6 +17,11 @@ class NewsScrapeResponse(BaseModel):
     count: int
     articles: list[NewsScrape]
     
+
+class VideoData(BaseModel):
+    folder_link: str
+    news_id: str
+    folder_id: str
     
 
     

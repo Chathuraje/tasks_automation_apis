@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.automations.crypto_cyber_news.features.news_fetcher import fetch_crypto_news
-from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrapeResponse, NewsScrape
+from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrapeResponse, NewsScrape, VideoData
 from app.automations.crypto_cyber_news.features.ask_gpt import select_best_news, generate_script_and_seo
 
 # Initialize router for news-related endpoints
@@ -48,7 +48,14 @@ async def generate_news_script(articles: NewsScrape):
         "seo_title": processed_result["seo_title"],
         "seo_description": processed_result["seo_description"],
         "seo_tags": processed_result["seo_tags"],
-        "image_prompts": processed_result["image_prompts"]
+        "image_prompt": processed_result["image_prompts"]
     }
 
 
+@router.post("/generate_video")
+async def generate_video(video_data: VideoData):
+    # TODO: Implement video generation logic based on the provided data
+    pass
+
+
+    # Final Call: https://hook.eu2.make.com/xn3asqws1nj2lflg5vlophebsaxbraf1?file_id=1EaddgYMsot8MRxmGBnPZg84gEutXLjWR&news_id=1abab1fa0ce98151851de27870f967e8
