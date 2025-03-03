@@ -48,7 +48,7 @@ async def generate_news_script(articles: NewsScrape):
         "seo_title": processed_result["seo_title"],
         "seo_description": processed_result["seo_description"],
         "seo_tags": processed_result["seo_tags"],
-        "image_prompt": processed_result["image_prompts"]
+        "image_prompt": processed_result["image_prompt"]
     }
 
 
