@@ -7,7 +7,7 @@ async def generate(video_data):
     try:
         folder_url = "https://drive.google.com/uc?export=download&id="
         
-        
+        os.makedirs("./tmp", exist_ok=True)
         directory = "./tmp/" + video_data.notion_id
         os.mkdir(directory)
 
