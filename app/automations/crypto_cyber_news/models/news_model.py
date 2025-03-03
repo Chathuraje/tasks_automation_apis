@@ -14,7 +14,6 @@ class NewsScrape(BaseModel):
     url: str
     
 class NewsScrapeResponse(BaseModel):
-    count: int
     articles: list[NewsScrape]
     
 

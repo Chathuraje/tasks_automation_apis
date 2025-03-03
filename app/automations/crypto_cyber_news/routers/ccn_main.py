@@ -7,17 +7,14 @@ from app.automations.crypto_cyber_news.features.ask_gpt import select_best_news,
 router = APIRouter(prefix="/crypto_cyber_news", tags=["Crypto Cyber News"])
 
 
-@router.get("/scrape-news", response_model=NewsScrapeResponse)
+@router.get("/scrape-news", response_model=list[NewsScrape])
 async def scrape_news():
     news = fetch_crypto_news()
     
     if "error" in news:
         raise HTTPException(status_code=400, detail=news["error"])
     
-    return {
-        "count": len(news),
-        "articles": news
-    }
+    return news
 
 @router.post("/find_best_article", response_model=NewsScrape)
 async def generate_news_script(articles: list[NewsScrape]):
