@@ -6,7 +6,7 @@ class NewsResponse(BaseModel):
     seo_title: str
     seo_description: str
     seo_tags: list[str]
-    image_prompt: list[str]
+    image_prompt: str
 
 
 class NewsScrape(BaseModel):
