@@ -12,14 +12,9 @@ class NewsResponse(BaseModel):
 class NewsScrape(BaseModel):
     title: str
     url: str
-    
-class NewsScrapeResponse(BaseModel):
-    articles: list[NewsScrape]
-    
 
 class VideoData(BaseModel):
-    folder_link: str
-    news_id: str
+    notion_id: str
     folder_id: str
     
 

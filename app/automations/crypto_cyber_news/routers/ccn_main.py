@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.automations.crypto_cyber_news.features.news_fetcher import fetch_crypto_news
-from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrapeResponse, NewsScrape, VideoData
+from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrape, VideoData
 from app.automations.crypto_cyber_news.features.ask_gpt import select_best_news, generate_script_and_seo
 
 # Initialize router for news-related endpoints
