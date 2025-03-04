@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.automations.crypto_cyber_news.routers import ccn_main
+from app.automations.ccn.routers import ccn
 
 app = FastAPI(
     title="Youtube Automation API Collection",
@@ -28,4 +28,5 @@ async def read_root():
     return {"message": "Hello, Crypto Cyber News!"}
 
 
-app.include_router(ccn_main.router)
+# Crypto Cyber News
+app.include_router(ccn.router)

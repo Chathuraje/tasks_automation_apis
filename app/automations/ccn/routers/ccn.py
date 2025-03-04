@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
-from app.automations.crypto_cyber_news.features.news_fetcher import fetch_crypto_news
-from app.automations.crypto_cyber_news.models.news_model import NewsResponse, NewsScrape, VideoData, VideoResponse
-from app.automations.crypto_cyber_news.features.ask_gpt import select_best_news, generate_script_and_seo
-from app.automations.crypto_cyber_news.features.generate_video import generate
+from app.automations.ccn.features.news_fetcher import fetch_crypto_news
+from app.automations.ccn.models.news_model import NewsResponse, NewsScrape, VideoData, VideoResponse
+from app.automations.ccn.features.ask_gpt import select_best_news, generate_script_and_seo
+from app.automations.ccn.features.generate_video import generate
 import httpx
 
 # Initialize router for news-related endpoints
-router = APIRouter(prefix="/crypto_cyber_news", tags=["Crypto Cyber News"])
+router = APIRouter(prefix="/ccn", tags=["Crypto Cyber News"])
 
 
 @router.get("/scrape-news", response_model=list[NewsScrape])

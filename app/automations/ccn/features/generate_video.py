@@ -1,6 +1,6 @@
 import json
 import os
-from app.automations.crypto_cyber_news.models.news_model import VideoResponse
+from app.automations.ccn.models.news_model import VideoResponse
 from app.features.gdown import download_file_from_drive
 from fastapi import HTTPException
 
@@ -24,8 +24,8 @@ async def download_content(video_data):
         folder_url = "https://drive.google.com/uc?export=download&id="
 
         os.makedirs("./storage", exist_ok=True)
-        os.makedirs("./storage/crypto_cyber_news", exist_ok=True)
-        directory = f"./storage/crypto_cyber_news/{video_data.notion_id}"
+        os.makedirs("./storage/ccn", exist_ok=True)
+        directory = f"./storage/ccn/{video_data.notion_id}"
         os.makedirs(directory, exist_ok=True)
 
         # Download audio, image, and JSON data
