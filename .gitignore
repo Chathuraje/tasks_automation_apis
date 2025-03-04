@@ -181,4 +181,4 @@ cython_debug/
 
 # Remove Draft Folder
 .draft
-tmp/*
+storage/*

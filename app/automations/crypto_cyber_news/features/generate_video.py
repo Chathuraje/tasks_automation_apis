@@ -23,8 +23,9 @@ async def download_content(video_data):
     try:
         folder_url = "https://drive.google.com/uc?export=download&id="
 
-        os.makedirs("./tmp", exist_ok=True)
-        directory = f"./tmp/{video_data.notion_id}"
+        os.makedirs("./storage", exist_ok=True)
+        os.makedirs("./storage/crypto_cyber_news", exist_ok=True)
+        directory = f"./storage/crypto_cyber_news/{video_data.notion_id}"
         os.makedirs(directory, exist_ok=True)
 
         # Download audio, image, and JSON data
