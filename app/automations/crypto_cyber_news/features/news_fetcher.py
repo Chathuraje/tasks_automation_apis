@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 from fastapi import HTTPException
-from app.core.config import config
+from app.features.config import config
 from app.automations.crypto_cyber_news.features.notion import get_uploaded_titles_from_notion
 
 def fetch_crypto_news():

@@ -1,6 +1,6 @@
 import requests
 from fastapi import HTTPException
-from app.core.config import config
+from app.features.config import config
 
 NOTION_API_URL = "https://api.notion.com/v1/databases/{database_id}/query"
 NOTION_HEADERS = {

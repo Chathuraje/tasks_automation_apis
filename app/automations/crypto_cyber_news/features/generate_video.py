@@ -1,7 +1,7 @@
 import json
 import os
 from app.automations.crypto_cyber_news.models.news_model import VideoResponse
-from app.core.gdown import download_file_from_drive
+from app.features.gdown import download_file_from_drive
 from fastapi import HTTPException
 
 # Function to generate subtitle timings dynamically

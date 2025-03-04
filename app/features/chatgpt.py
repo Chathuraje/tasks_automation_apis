@@ -1,5 +1,5 @@
 from openai import OpenAI
-from app.core.config import config
+from app.features.config import config
 import json
 
 client = OpenAI(

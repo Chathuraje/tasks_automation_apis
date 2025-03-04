@@ -1,6 +1,6 @@
 from fastapi import HTTPException
-from app.core.config import config
-from app.core.notion import query_notion_database
+from app.features.config import config
+from app.features.notion import query_notion_database
 
 def get_uploaded_titles_from_notion():
     """

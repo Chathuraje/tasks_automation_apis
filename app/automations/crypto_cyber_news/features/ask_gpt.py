@@ -1,4 +1,4 @@
-from app.core.chatgpt import chat_with_gpt
+from app.features.chatgpt import chat_with_gpt
 
 async def select_best_news(articles):
     """
