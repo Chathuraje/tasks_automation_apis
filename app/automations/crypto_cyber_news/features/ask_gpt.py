@@ -123,22 +123,3 @@ async def generate_script_and_seo(article):
 
     response = await chat_with_gpt(messages, response_format)
     return response["response"]
-
-
-# async def research_news_articles(articles):
-#     """
-#     Processes a list of news articles:
-#     1. Selects the best article based on relevance and impact.
-#     2. Generates a 1-minute YouTube script and SEO metadata in a single API call.
-#     3. Returns the processed data including title, URL, script, SEO title, description, and tags.
-#     """
-#     best_article = await select_best_news(articles)
-#     if not best_article:
-#         return {"error": "No suitable news article found."}
-
-#     # result = await generate_script_and_seo(best_article)
-    
-#     return {
-#         "article_title": best_article["title"],
-#         "article_url": best_article["url"]
-#     }
