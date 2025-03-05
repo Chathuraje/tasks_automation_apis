@@ -9,9 +9,15 @@ from app.features.ffmpeg.tools import get_audio_duration
 from app.features.ffmpeg.subtitle import add_permanent_subtitles, convert_srt_to_ass
 import random
 from app.features.google_drive.drive_upload import upload_to_drive
+from app.features.google_drive.tools import file_exists
+
+ACCOUNT_ID = "ccn"
 
 # Download assets from Google Drive
 async def download_content(video_data):
+    AUDIO_ID = video_data.audio_id
+    TRANSCRIPTION_ID = video_data.transcription_id
+    
     try:
         folder_url = "https://drive.google.com/uc?export=download&id="
 
@@ -22,7 +28,7 @@ async def download_content(video_data):
 
         # Download audio, image, and JSON data
         audio_path = os.path.join(directory, "audio.mp3")
-        await download_file_from_drive(folder_url + video_data.audio_id, audio_path)
+        await download_file_from_drive(folder_url + AUDIO_ID, audio_path)
         
         directory_videos = "./app/automations/ccn/resources/videos.json"
         video_path = os.path.join(directory, "video.mp4")
@@ -35,7 +41,7 @@ async def download_content(video_data):
 
         transcription_path = os.path.join(directory, "transcription.srt")
         await download_file_from_drive(
-            folder_url + video_data.transcription_id, transcription_path
+            folder_url + TRANSCRIPTION_ID, transcription_path
         )
 
         return directory
@@ -48,7 +54,8 @@ async def download_content(video_data):
 
 # Generate the video with subtitles
 async def generate(video_data):
-    # YouTube Shorts dimensions
+    NOTION_ID = video_data.notion_id
+    FOLDER_ID = video_data.folder_id
 
     directory = await download_content(video_data)
     if not directory:
@@ -59,7 +66,7 @@ async def generate(video_data):
     audio_path = directory + "/audio.mp3"
     transcription_path = directory + "/transcription.srt"
     tmp_video_path = directory + "/output.mp4"
-    final_video_path = directory + "/" + video_data.notion_id + ".mp4"
+    final_video_path = directory + "/" + NOTION_ID + ".mp4"
     
     if not os.path.exists(tmp_video_path):
         merge_audio_video(video_path, audio_path, tmp_video_path, loop=True)
@@ -71,8 +78,10 @@ async def generate(video_data):
         style = "Fontname=Roboto,Fontsize=22,OutlineColour=&H40000000,Bold=1,BackColour=&H00000000,Spacing=0.2,Outline=0,Shadow=0.75,Alignment=2"
         add_permanent_subtitles(tmp_video_path, transcription_path, final_video_path, style)
         
-    upload_to_drive(final_video_path, "1_NynL6Awdu2iL4a5ClozmHF4a3gV3kP-", "ccn")
-
-    # Return video ID
-    video_id = f"video_{video_data.notion_id}"
-    return {"video_id": video_id, "notion_id": video_data.notion_id}
+        
+    existing_file_id = await file_exists(ACCOUNT_ID, NOTION_ID + ".mp4", FOLDER_ID)
+    if existing_file_id:
+        return {"video_id": existing_file_id, "notion_id": NOTION_ID}
+        
+    upload_response = await upload_to_drive(final_video_path, FOLDER_ID, ACCOUNT_ID)
+    return {"video_id": upload_response["file_id"], "notion_id": NOTION_ID}

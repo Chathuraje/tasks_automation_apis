@@ -17,6 +17,7 @@ class VideoData(BaseModel):
     notion_id: str
     audio_id: str
     transcription_id: str
+    folder_id: str
     
 class VideoResponse(BaseModel):
     video_id: str

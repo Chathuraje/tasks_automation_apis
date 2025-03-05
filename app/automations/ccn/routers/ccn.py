@@ -58,15 +58,21 @@ async def generate_video(video_data: VideoData):
     if video_response is None:
         raise HTTPException(status_code=400, detail="Error generating video")
 
-    # url = f"https://hook.eu2.make.com/xn3asqws1nj2lflg5vlophebsaxbraf1?video_id={video_response['video_id']}&notion_id={video_response['notion_id']}"
+    url = f"https://hook.eu2.make.com/47kt0jpyb6mfg3icmccczwq9ht2s3xry?video_id={video_response['video_id']}&notion_id={video_response['notion_id']}"
 
-    # async with httpx.AsyncClient() as client:
-    #     response = await client.get(url)
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
 
-    # if response.status_code != 200:
-    #     raise HTTPException(status_code=400, detail=f"Error sending video data to Notion: {response.text}")
+    if response.status_code != 200:
+        raise HTTPException(status_code=400, detail=f"Error sending video data to Notion: {response.text}")
 
-    # if response.status_code != 200:
-    #     raise HTTPException(status_code=400, detail="Error sending video data to Notion")
+    if response.status_code != 200:
+        raise HTTPException(status_code=400, detail="Error sending video data to Notion")
+    
+    return {
+        "message": "Video generation successful",
+        "video_id": video_response["video_id"],
+        "notion_id": video_response["notion_id"]
+        }
 
-    return {"message": "Video generation successful"}
+    
