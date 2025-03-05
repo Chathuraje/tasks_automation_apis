@@ -16,8 +16,7 @@ class NewsScrape(BaseModel):
 class VideoData(BaseModel):
     notion_id: str
     audio_id: str
-    image_id: str
-    data_id: str
+    transcription_id: str
     
 class VideoResponse(BaseModel):
     video_id: str

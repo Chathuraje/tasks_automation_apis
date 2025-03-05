@@ -78,11 +78,6 @@ async def generate_script_and_seo(article):
                        "- A brief, engaging video description (max 2 sentences)\n"
                        "- A set of relevant tags (max 10 keywords)\n"
                        "Return everything in JSON format."
-        },
-        {
-            "role": "user",
-            "content": "Finally, create one image prompt based on the script that can be used to generate AI-generated visuals for the video. "
-                       "This prompt should describe a visually compelling scene related to the script."
         }
     ]
 
@@ -109,13 +104,9 @@ async def generate_script_and_seo(article):
                         "description": "List of relevant YouTube video tags (max 10).",
                         "type": "array",
                         "items": {"type": "string"}
-                    },
-                    "image_prompt": {
-                        "description": "The one AI-generated image prompts based on the script.",
-                        "type": "string"
                     }
                 },
-                "required": ["script", "seo_title", "seo_description", "seo_tags", "image_prompts"],
+                "required": ["script", "seo_title", "seo_description", "seo_tags"],
                 "additionalProperties": False
             }
         }
