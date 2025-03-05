@@ -14,8 +14,10 @@ def fetch_crypto_news():
     - Returns a structured list of news articles.
     
     """
+    
+    CCN_NEWS_API_BASE_URL = "https://newsapi.org/v2/everything"
 
-    if not config.NEWS_API_KEY:
+    if not config.CCN_NEWS_API_KEY:
         raise HTTPException(status_code=500, detail="News API key is missing. Set NEWS_API_KEY in .env")
 
     # Get today's date and two days back date in 'YYYY-MM-DD' format
@@ -33,11 +35,11 @@ def fetch_crypto_news():
         "sortBy": "publishedAt",  # Sorting by most recent articles
         "language": "en",  # Fetch only English news
         "pageSize": 12,  # Limit to 10 articles
-        "apiKey": config.NEWS_API_KEY
+        "apiKey": config.CCN_NEWS_API_KEY
     }
 
     # Make a request to NewsAPI
-    response = requests.get(config.NEWS_API_BASE_URL, params=params)
+    response = requests.get(CCN_NEWS_API_BASE_URL, params=params)
     
     # Check if API request was successful
     if response.status_code != 200:

@@ -4,11 +4,11 @@ from app.automations.ccn.models.news_model import VideoResponse
 from app.features.gdown import download_file_from_drive
 from fastapi import HTTPException
 from moviepy import *
-
 from app.features.ffmpeg.video import merge_audio_video
 from app.features.ffmpeg.tools import get_audio_duration
 from app.features.ffmpeg.subtitle import add_permanent_subtitles, convert_srt_to_ass
 import random
+from app.features.google_drive.drive_upload import upload_to_drive
 
 # Download assets from Google Drive
 async def download_content(video_data):
@@ -49,7 +49,6 @@ async def download_content(video_data):
 # Generate the video with subtitles
 async def generate(video_data):
     # YouTube Shorts dimensions
-    shorts_size = (1080, 1920)
 
     directory = await download_content(video_data)
     if not directory:
@@ -71,6 +70,8 @@ async def generate(video_data):
         
         style = "Fontname=Roboto,Fontsize=22,OutlineColour=&H40000000,Bold=1,BackColour=&H00000000,Spacing=0.2,Outline=0,Shadow=0.75,Alignment=2"
         add_permanent_subtitles(tmp_video_path, transcription_path, final_video_path, style)
+        
+    upload_to_drive(final_video_path, "1_NynL6Awdu2iL4a5ClozmHF4a3gV3kP-", "ccn")
 
     # Return video ID
     video_id = f"video_{video_data.notion_id}"

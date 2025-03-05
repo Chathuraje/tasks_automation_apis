@@ -4,7 +4,7 @@ from app.features.config import config
 
 NOTION_API_URL = "https://api.notion.com/v1/databases/{database_id}/query"
 NOTION_HEADERS = {
-    "Authorization": f"Bearer {config.NOTION_API_KEY}",
+    "Authorization": f"Bearer {config.GLOBAL_NOTION_API_KEY}",
     "Content-Type": "application/json",
     "Notion-Version": "2022-06-28"
 }

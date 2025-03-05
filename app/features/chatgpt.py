@@ -3,7 +3,7 @@ from app.features.config import config
 import json
 
 client = OpenAI(
-    api_key=config.OPENAI_API_KEY
+    api_key=config.GLOBAL_OPENAI_API_KEY
 )
 
 async def chat_with_gpt(messages, response_format):

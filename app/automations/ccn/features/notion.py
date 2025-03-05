@@ -8,7 +8,7 @@ def get_uploaded_titles_from_notion():
     """
     
     
-    data = query_notion_database(config.DAILY_ARTICLE_DB_NOTION)
+    data = query_notion_database(config.CCN_DAILY_ARTICLE_DB_NOTION)
     
     if "results" not in data:
         raise HTTPException(status_code=500, detail="Invalid response from Notion API")
