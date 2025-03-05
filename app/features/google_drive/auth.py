@@ -22,10 +22,11 @@ CREDENTIALS_CONFIG = {
     }
 }
 
+
 def get_credentials(account_id: str):
     Token_Path = "./app/features/google_drive/tokens"
     os.makedirs(Token_Path, exist_ok=True)
-    
+
     creds = None
     TOKEN_FILE = f"{Token_Path}/token_{account_id}.json"
 
@@ -46,8 +47,11 @@ def get_credentials(account_id: str):
                 print(f"Temporary file path: {tmp_file_path}")
 
             # Load credentials from the temporary file
-            flow = InstalledAppFlow.from_client_secrets_file(tmp_file_path, SCOPES, redirect_uri="http://localhost/")
-            creds = flow.run_local_server(port=8001)
+            flow = InstalledAppFlow.from_client_secrets_file(
+                tmp_file_path,
+                SCOPES
+            )
+            creds = flow.run_local_server(port=8001, access_type="offline", prompt="consent")
 
             # Clean up the temporary file
             os.remove(tmp_file_path)
@@ -57,4 +61,3 @@ def get_credentials(account_id: str):
             token.write(creds.to_json())
 
     return creds
-
