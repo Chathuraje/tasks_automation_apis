@@ -5,9 +5,10 @@ root_router = APIRouter(
 )
 
 @root_router.get(
-    "/", 
-    summary="API Root Endpoint", 
-    description="This endpoint serves as the root of API v1. It can be used for health checks or welcome messages."
+    "/",
+    summary="Root Endpoint",
+    description="This is the root endpoint of the API. It provides a welcome message.",
+    response_model=str,
 )
 def read_root():
     return {"message": "🚀 Welcome to the API v1"}
