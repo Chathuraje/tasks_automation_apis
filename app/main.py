@@ -25,7 +25,7 @@ async def read_root():
 
     - Returns a simple greeting message.
     """
-    return {"message": "Hello, Crypto Cyber News!"}
+    return {"message": "Hello, Automaters!"}
 
 
 # Crypto Cyber News
