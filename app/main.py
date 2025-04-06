@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.automations.ccn.routers import ccn
+from app.api.v1.main import v1_router
 
 app = FastAPI(
-    title="Youtube Automation API Collection",
-    description="API for Automating Youtube Channel",
+    title="Work Automation API Collection",
+    description="API for Automating Your Works",
     version="1.0.0"
 )
 
@@ -18,15 +18,4 @@ app.add_middleware(
 )
 
 # Include routers
-@app.get("/")
-async def read_root():
-    """
-    Root endpoint to verify the API is running.
-
-    - Returns a simple greeting message.
-    """
-    return {"message": "Hello, Automaters!"}
-
-
-# Crypto Cyber News
-app.include_router(ccn.router)
+app.include_router(v1_router)

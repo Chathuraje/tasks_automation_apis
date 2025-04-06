@@ -1,4 +1,4 @@
-from app.features.ffmpeg.base import run_ffmpeg_command
+from app.utils.ffmpeg.base import run_ffmpeg_command
 
 # Subtitle Processing Functions
 

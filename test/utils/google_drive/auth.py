@@ -5,7 +5,7 @@ from fastapi import HTTPException
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from app.features.config import config
+from app.core.config import config
 
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 
