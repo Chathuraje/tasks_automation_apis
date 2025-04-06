@@ -15,7 +15,7 @@ def read_root():
 
 
 @root_router.get(
-    "/health",
+    "/health-check",
     summary="Health Check Endpoint",
     description="This endpoint checks the health of the API. It returns a simple message indicating that the API is running.",
     response_model=dict,
