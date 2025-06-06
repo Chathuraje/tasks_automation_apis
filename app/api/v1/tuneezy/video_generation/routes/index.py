@@ -50,25 +50,27 @@ async def upload_audio_video(
 
 @video_generation.post("/merge_audio-video")
 async def merge_audio_video(
-    background_tasks: BackgroundTasks,
-    audio_file: UploadFile = File(...),
-    video_file: UploadFile = File(...),
+    background_tasks: BackgroundTasks, audio_file: str, video_file: str
 ):
     # Save uploaded input files with unique names
-    temp_audio_path = os.path.join(
-        TEMP_DIR, f"audio_{uuid.uuid4()}_{audio_file.filename}"
-    )
-    temp_video_path = os.path.join(
-        TEMP_DIR, f"video_{uuid.uuid4()}_{video_file.filename}"
-    )
+    temp_audio_path = os.path.join(TEMP_DIR, audio_file)
+    temp_video_path = os.path.join(TEMP_DIR, video_file)
 
     # Output temporary filename (.tmp)
     output_tmp_filename = f"merged_{uuid.uuid4()}.mp4"
     output_tmp_path = os.path.join(TEMP_DIR, output_tmp_filename)
 
-    # Save uploaded files to disk
-    await ffmpeg_commands.save_upload_file(audio_file, temp_audio_path)
-    await ffmpeg_commands.save_upload_file(video_file, temp_video_path)
+    # Check if input files exist
+    if not os.path.isfile(temp_audio_path):
+        raise HTTPException(
+            status_code=400,
+            detail={"success": False, "message": "Audio file not found."},
+        )
+    if not os.path.isfile(temp_video_path):
+        raise HTTPException(
+            status_code=400,
+            detail={"success": False, "message": "Video file not found."},
+        )
 
     # Schedule background merge task
     background_tasks.add_task(
