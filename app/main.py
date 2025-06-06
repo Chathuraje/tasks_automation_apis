@@ -5,7 +5,7 @@ from app.api.v1.main import v1_router
 app = FastAPI(
     title="Work Automation API Collection",
     description="API for Automating Your Works",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # Allow CORS (Cross-Origin Resource Sharing) for docs to work
