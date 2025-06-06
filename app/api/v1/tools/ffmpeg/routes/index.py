@@ -59,15 +59,32 @@ async def merge_audio_video(
 async def get_file(filename: str):
     # Prevent directory traversal attack
     if ".." in filename or filename.startswith("/"):
-        raise HTTPException(status_code=400, detail="Invalid filename")
+        raise HTTPException(
+            status_code=200,
+            detail={
+                "success": False,
+                "message": "Invalid filename",
+            },
+        )
 
-    # No need to check temp files; only final .mp4 files will be served
     if filename.endswith(".tmp"):
-        raise HTTPException(status_code=404, detail="File is still being generated")
+        raise HTTPException(
+            status_code=200,
+            detail={
+                "success": False,
+                "message": "Temporary files cannot be accessed directly",
+            },
+        )
 
     file_path = os.path.join(TEMP_DIR, filename)
 
     if not os.path.isfile(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "success": False,
+                "message": "Generation in progress or file not found",
+            },
+        )
 
     return FileResponse(file_path, filename=filename)
