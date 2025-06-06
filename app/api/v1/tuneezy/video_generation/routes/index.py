@@ -10,15 +10,45 @@ from ..utils import ffmpeg_commands
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-ffmpeg_router = APIRouter(
-    tags=["ffmpeg"], prefix="/ffmpeg", responses={404: {"description": "Not found"}}
+video_generation = APIRouter(
+    prefix="/video_generation", responses={404: {"description": "Not found"}}
 )
 
 TEMP_DIR = "storage/temp"
 os.makedirs(TEMP_DIR, exist_ok=True)
 
 
-@ffmpeg_router.post("/merge_audio-video")
+# Utility to save uploaded file
+async def save_upload_file(upload_file: UploadFile, destination: str):
+    with open(destination, "wb") as out_file:
+        content = await upload_file.read()
+        out_file.write(content)
+
+
+@video_generation.post("/upload-audio-video")
+async def upload_audio_video(
+    file_type: str,  # expects 'audio' or 'video'
+    file: UploadFile = File(...),
+):
+    # Sanitize and validate file_type
+    file_type = file_type.lower()
+    if file_type not in ["audio", "video"]:
+        return {"error": "Invalid file_type. Must be 'audio' or 'video'."}
+
+    # Create a new filename using UUID and file_type
+    new_filename = f"{file_type}_{uuid.uuid4()}_{file.filename}"
+    file_path = os.path.join(TEMP_DIR, new_filename)
+
+    # Save the uploaded file
+    await save_upload_file(file, file_path)
+
+    return {
+        "file_type": file_type,
+        "saved_filename": new_filename,
+    }
+
+
+@video_generation.post("/merge_audio-video")
 async def merge_audio_video(
     background_tasks: BackgroundTasks,
     audio_file: UploadFile = File(...),
@@ -55,7 +85,7 @@ async def merge_audio_video(
     return {"filename": output_final_filename}
 
 
-@ffmpeg_router.get("/files/{filename}")
+@video_generation.get("/files/{filename}")
 async def get_file(filename: str):
     # Prevent directory traversal attack
     if ".." in filename or filename.startswith("/"):
