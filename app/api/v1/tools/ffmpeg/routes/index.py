@@ -80,7 +80,7 @@ async def get_file(filename: str):
 
     if not os.path.isfile(file_path):
         raise HTTPException(
-            status_code=404,
+            status_code=200,
             detail={
                 "success": False,
                 "message": "Generation in progress or file not found",
