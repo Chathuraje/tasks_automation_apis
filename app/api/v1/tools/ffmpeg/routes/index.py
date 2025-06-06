@@ -1,9 +1,14 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
 import shutil
 import os
 import uuid
+import asyncio
+import sys
 from ..utils import ffmpeg_commands
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 ffmpeg_router = APIRouter(
     tags=["ffmpeg"], prefix="/ffmpeg", responses={404: {"description": "Not found"}}
@@ -15,40 +20,54 @@ os.makedirs(TEMP_DIR, exist_ok=True)
 
 @ffmpeg_router.post("/merge_audio-video")
 async def merge_audio_video(
-    audio_file: UploadFile = File(...), video_file: UploadFile = File(...)
+    background_tasks: BackgroundTasks,
+    audio_file: UploadFile = File(...),
+    video_file: UploadFile = File(...),
 ):
-    # Generate unique temp file paths inside storage/temp
+    # Save uploaded input files with unique names
     temp_audio_path = os.path.join(
         TEMP_DIR, f"audio_{uuid.uuid4()}_{audio_file.filename}"
     )
     temp_video_path = os.path.join(
         TEMP_DIR, f"video_{uuid.uuid4()}_{video_file.filename}"
     )
-    output_file = os.path.join(TEMP_DIR, f"merged_{uuid.uuid4()}.mp4")
 
-    try:
-        # Save uploaded files
-        with open(temp_audio_path, "wb") as f:
-            shutil.copyfileobj(audio_file.file, f)
-        with open(temp_video_path, "wb") as f:
-            shutil.copyfileobj(video_file.file, f)
+    # Output temporary filename (.tmp)
+    output_tmp_filename = f"merged_{uuid.uuid4()}.mp4"
+    output_tmp_path = os.path.join(TEMP_DIR, output_tmp_filename)
 
-        # Call your ffmpeg merge function
-        await ffmpeg_commands.merge_audio_video(
-            temp_audio_path, temp_video_path, output_file
-        )
+    # Save uploaded files to disk
+    await ffmpeg_commands.save_upload_file(audio_file, temp_audio_path)
+    await ffmpeg_commands.save_upload_file(video_file, temp_video_path)
 
-        if not os.path.exists(output_file):
-            raise HTTPException(status_code=500, detail="Failed to create merged video")
+    # Schedule background merge task
+    background_tasks.add_task(
+        ffmpeg_commands.run_merge_audio_video,
+        temp_audio_path,
+        temp_video_path,
+        output_tmp_path,
+    )
 
-        # Return the merged file as a streaming response
-        return FileResponse(
-            output_file, media_type="video/mp4", filename="merged_video.mp4"
-        )
+    # replace merged_ with empty string to get final filename
+    output_final_filename = output_tmp_filename.replace("merged_", "")
 
-    finally:
-        # Clean up temp input files (keep output if you want)
-        if os.path.exists(temp_audio_path):
-            os.remove(temp_audio_path)
-        if os.path.exists(temp_video_path):
-            os.remove(temp_video_path)
+    # Immediately return the final filename (client can poll /files/{filename})
+    return {"filename": output_final_filename}
+
+
+@ffmpeg_router.get("/files/{filename}")
+async def get_file(filename: str):
+    # Prevent directory traversal attack
+    if ".." in filename or filename.startswith("/"):
+        raise HTTPException(status_code=400, detail="Invalid filename")
+
+    # No need to check temp files; only final .mp4 files will be served
+    if filename.endswith(".tmp"):
+        raise HTTPException(status_code=404, detail="File is still being generated")
+
+    file_path = os.path.join(TEMP_DIR, filename)
+
+    if not os.path.isfile(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    return FileResponse(file_path, filename=filename)
