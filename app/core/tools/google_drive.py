@@ -11,7 +11,7 @@ upload_progress = {}
 CHUNK_SIZE = 256 * 1024
 
 
-async def upload_file(file_path, folder_id, service_account_data, upload_id):
+async def upload_file(file_name, file_path, folder_id, service_account_data, upload_id):
     """
     Uploads a file to a specific Google Drive folder using a service account JSON (dict).
 
@@ -35,7 +35,6 @@ async def upload_file(file_path, folder_id, service_account_data, upload_id):
 
     service = build("drive", "v3", credentials=creds)
 
-    file_name = os.path.basename(file_path)
     file_metadata = {
         "name": file_name,
         "parents": [folder_id],

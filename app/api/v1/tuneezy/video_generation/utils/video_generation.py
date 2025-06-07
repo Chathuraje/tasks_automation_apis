@@ -18,22 +18,32 @@ async def save_upload_file(upload_file: UploadFile, destination: str):
 
 
 def run_upload_file_to_google_drive(
-    file_path: str, folder_id: str, service_account_data: str, upload_id: str
+    file_name: str,
+    file_path: str,
+    folder_id: str,
+    service_account_data: str,
+    upload_id: str,
 ):
     asyncio.run(
         upload_file_to_google_drive(
-            file_path, folder_id, service_account_data, upload_id
+            file_name, file_path, folder_id, service_account_data, upload_id
         )
     )
 
 
 # Utility to upload file to the google drive
 async def upload_file_to_google_drive(
-    file_path: str, folder_id: str, service_account_data: str, upload_id: str
+    file_name: str,
+    file_path: str,
+    folder_id: str,
+    service_account_data: str,
+    upload_id: str,
 ):
 
     # Upload the file to Google Drive
-    file_id = await upload_file(file_path, folder_id, service_account_data, upload_id)
+    file_id = await upload_file(
+        file_name, file_path, folder_id, service_account_data, upload_id
+    )
 
     # Prepare the result data
     result_data = {

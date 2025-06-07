@@ -156,6 +156,7 @@ async def upload_to_google_drive(
     background_tasks: BackgroundTasks,
     folder_id: str,
     file_id: str,
+    file_name: str = str,
     service_account_data: str = Form(...),
 ):
     # Prevent directory traversal attack
@@ -185,6 +186,7 @@ async def upload_to_google_drive(
     # Upload to Google Drive
     background_tasks.add_task(
         video_generation.run_upload_file_to_google_drive,
+        file_name,
         file_path,
         folder_id,
         service_account_data,
