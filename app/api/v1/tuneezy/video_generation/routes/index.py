@@ -1,10 +1,19 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Form
+from fastapi import (
+    APIRouter,
+    UploadFile,
+    File,
+    HTTPException,
+    BackgroundTasks,
+    Form,
+    Request,
+)
 from fastapi.responses import FileResponse
 import os
 import uuid
 import asyncio
 import sys
 from ..utils import ffmpeg_commands, video_generation
+from fastapi.responses import RedirectResponse
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -204,3 +213,80 @@ async def upload_to_google_drive(
 async def check_upload_progress(upload_id: str):
 
     return await video_generation.get_upload_progress(upload_id)
+
+
+@video_generation_routes.post("/auth")
+async def youtube_auth(
+    CLIENT_SECRETS: str = Form(...),
+):
+    """
+    Authorizes the YouTube Data API using a service account.
+    """
+    return await video_generation.youtube_auth(CLIENT_SECRETS)
+
+
+@video_generation_routes.get("/oauth2callback")
+async def oauth2callback(request: Request):
+    """
+    Handles the OAuth2 callback from YouTube.
+    """
+    return await video_generation.youtube_auth_callback(request)
+
+
+@video_generation_routes.get("/upload_youtube_video/{filename}")
+async def upload_youtube_video(
+    background_tasks: BackgroundTasks,
+    filename: str,
+    title: str,
+    description: str,
+    tags: str,
+    category_id: str,
+    privacy_status: str,
+):
+    # Prevent directory traversal attack
+    if ".." in filename or filename.startswith("/"):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "success": False,
+                "message": "Invalid filename",
+            },
+        )
+
+    file_path = os.path.join(TEMP_DIR, filename)
+
+    if not os.path.isfile(file_path):
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "success": False,
+                "message": "File not found",
+            },
+        )
+        
+    # Generate a unique upload ID
+    upload_id = str(uuid.uuid4())
+
+    # Upload to Google Drive
+    background_tasks.add_task(
+        video_generation.run_upload_youtube_video,
+        file_path,
+        title,
+        description,
+        tags,
+        category_id,
+        privacy_status,
+        upload_id
+    )
+
+    return {
+        "success": True,
+        "message": "Upload started",
+        "upload_id": upload_id,
+    }
+
+
+@video_generation_routes.get("/check_youtube_upload_progress/{upload_id}")
+async def check_youtube_upload_progress(upload_id: str):
+
+    return await video_generation.get_youtube_upload_progress(upload_id)
