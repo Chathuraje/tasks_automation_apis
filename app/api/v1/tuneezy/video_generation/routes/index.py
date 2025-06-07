@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
+from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Form
 from fastapi.responses import FileResponse
 import os
 import uuid
@@ -149,3 +149,56 @@ async def get_file(filename: str):
         )
 
     return FileResponse(file_path, filename=filename)
+
+
+@video_generation_routes.post("/upload_to_google_drive")
+async def upload_to_google_drive(
+    background_tasks: BackgroundTasks,
+    folder_id: str,
+    file_id: str,
+    service_account_data: str = Form(...),
+):
+    # Prevent directory traversal attack
+    if ".." in file_id or file_id.startswith("/"):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "success": False,
+                "message": "Invalid file_id",
+            },
+        )
+
+    file_path = os.path.join(TEMP_DIR, file_id)
+
+    if not os.path.isfile(file_path):
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "success": False,
+                "message": "File not found",
+            },
+        )
+
+    # Generate a unique upload ID
+    upload_id = str(uuid.uuid4())
+
+    # Upload to Google Drive
+    background_tasks.add_task(
+        video_generation.run_upload_file_to_google_drive,
+        file_path,
+        folder_id,
+        service_account_data,
+        upload_id,
+    )
+
+    return {
+        "success": True,
+        "message": "Upload started",
+        "upload_id": upload_id,
+    }
+
+
+@video_generation_routes.get("/check_upload_progress/{upload_id}")
+async def check_upload_progress(upload_id: str):
+
+    return await video_generation.get_upload_progress(upload_id)
