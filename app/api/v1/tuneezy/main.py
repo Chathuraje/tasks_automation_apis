@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .video_generation.routes.index import video_generation
+from .video_generation.routes.index import video_generation_routes
 
 tuneezy_router = APIRouter(
     prefix="/tuneezy",
@@ -7,4 +7,4 @@ tuneezy_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
-tuneezy_router.include_router(video_generation)
+tuneezy_router.include_router(video_generation_routes)

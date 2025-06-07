@@ -1,16 +1,15 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse
-import shutil
 import os
 import uuid
 import asyncio
 import sys
-from ..utils import ffmpeg_commands
+from ..utils import ffmpeg_commands, video_generation
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-video_generation = APIRouter(
+video_generation_routes = APIRouter(
     prefix="/video_generation", responses={404: {"description": "Not found"}}
 )
 
@@ -18,14 +17,7 @@ TEMP_DIR = "storage/temp"
 os.makedirs(TEMP_DIR, exist_ok=True)
 
 
-# Utility to save uploaded file
-async def save_upload_file(upload_file: UploadFile, destination: str):
-    with open(destination, "wb") as out_file:
-        content = await upload_file.read()
-        out_file.write(content)
-
-
-@video_generation.post("/upload-audio-video")
+@video_generation_routes.post("/upload-audio-video")
 async def upload_audio_video(
     file_type: str,  # expects 'audio' or 'video'
     file: UploadFile = File(...),
@@ -40,7 +32,7 @@ async def upload_audio_video(
     file_path = os.path.join(TEMP_DIR, new_filename)
 
     # Save the uploaded file
-    await save_upload_file(file, file_path)
+    await video_generation.save_upload_file(file, file_path)
 
     return {
         "file_type": file_type,
@@ -48,7 +40,7 @@ async def upload_audio_video(
     }
 
 
-@video_generation.post("/merge_audio-video")
+@video_generation_routes.post("/merge_audio-video")
 async def merge_audio_video(
     background_tasks: BackgroundTasks, audio_file: str, video_file: str
 ):
@@ -87,7 +79,44 @@ async def merge_audio_video(
     return {"filename": output_final_filename}
 
 
-@video_generation.get("/files/{filename}")
+# check if generation compelted
+@video_generation_routes.get("/check_generation/{filename}")
+async def check_generation(filename: str):
+    # Prevent directory traversal attack
+    if ".." in filename or filename.startswith("/"):
+        raise HTTPException(
+            status_code=200,
+            detail={
+                "success": False,
+                "message": "Invalid filename",
+            },
+        )
+
+    if filename.endswith(".tmp"):
+        raise HTTPException(
+            status_code=200,
+            detail={
+                "success": False,
+                "message": "Temporary files cannot be accessed directly",
+            },
+        )
+
+    file_path = os.path.join(TEMP_DIR, filename)
+
+    if not os.path.isfile(file_path):
+        return {
+            "success": False,
+            "message": "Generation in progress or file not found",
+        }
+
+    return {
+        "success": True,
+        "message": "Generation completed",
+        "filename": filename,
+    }
+
+
+@video_generation_routes.get("/files/{filename}")
 async def get_file(filename: str):
     # Prevent directory traversal attack
     if ".." in filename or filename.startswith("/"):
