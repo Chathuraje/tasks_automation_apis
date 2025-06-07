@@ -68,7 +68,4 @@ async def upload_file(file_name, file_path, folder_id, service_account_data, upl
     print(f"Upload complete! File ID: {response.get('id')}")
     upload_progress[upload_id] = 100  # Ensure final update
 
-    return {
-        "video_id": response.get("id"),
-        "upload_id": upload_id,
-    }
+    return response.get("id")
